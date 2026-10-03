@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatWazungu · Digital Earning App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-wrapper {
+      max-width: 420px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 36px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      padding: 24px 20px 28px;
+      transition: all 0.2s ease;
+    }
+
+    /* header / brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .brand-icon {
+      background: #0b2b4d;
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0b2b4d;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-name span {
+      color: #ff7a00;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: #8f9eb0;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin-top: -2px;
+    }
+
+    /* screens management */
+    .screen {
+      display: none;
+      animation: fade 0.25s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.4; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0b2b4d;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .subhead {
+      font-size: 15px;
+      color: #5f6c7e;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    /* form elements */
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e2b3c;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 15px;
+      background: #fafcff;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #ff7a00;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      background: #0b2b4d;
+      color: white;
+      border: none;
+      padding: 16px 20px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 18px rgba(11, 43, 77, 0.15);
+    }
+
+    .btn-orange {
+      background: #ff7a00;
+      box-shadow: 0 8px 18px rgba(255, 122, 0, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .alt-action {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #5f6c7e;
+    }
+
+    .alt-action a {
+      color: #ff7a00;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .price-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #fef2e8;
+      color: #ff7a00;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .price-badge i {
+      font-size: 16px;
+    }
+
+    /* dashboard */
+    .balance-card {
+      background: linear-gradient(135deg, #0b2b4d, #1a3f62);
+      border-radius: 28px;
+      padding: 24px 22px;
+      color: white;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 24px -6px rgba(11, 43, 77, 0.3);
+    }
+
+    .balance-label {
+      font-size: 14px;
+      opacity: 0.75;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .balance-amount {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .balance-amount span {
+      font-size: 20px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 10px 16px;
+      border-radius: 18px;
+      font-size: 13px;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      flex: 1;
+      text-align: center;
+    }
+
+    .chat-preview {
+      background: #f8faff;
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 18px;
+      border: 1px solid #eef2f9;
+    }
+
+    .chat-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #0b2b4d;
+      font-size: 15px;
+    }
+
+    .chat-preview-header i {
+      color: #ff7a00;
+    }
+
+    .foreigner-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eef2f9;
+    }
+
+    .foreigner-row:last-child {
+      border-bottom: none;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      background: #d9e2ef;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #0b2b4d;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .foreigner-info {
+      flex: 1;
+    }
+
+    .foreigner-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1a2a3a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flag {
+      font-size: 16px;
+    }
+
+    .earn-rate {
+      font-size: 12px;
+      color: #ff7a00;
+      font-weight: 600;
+      background: #fff3e7;
+      padding: 2px 8px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .chat-btn {
+      background: #0b2b4d;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .chat-btn:hover {
+      background: #ff7a00;
+    }
+
+    .small-note {
+      font-size: 12px;
+      color: #8f9eb0;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .pin-input {
+      letter-spacing: 6px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: white;
+      max-width: 380px;
+      width: 90%;
+      border-radius: 32px;
+      padding: 28px 24px;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .modal-box h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #0b2b4d;
+    }
+
+    .modal-box p {
+      color: #5f6c7e;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* admin tag */
+    .admin-badge {
+      font-size: 10px;
+      background: #0b2b4d;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      margin-left: 8px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0b2b4d;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+      z-index: 1100;
+      opacity: 0;
+      transition: 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      bottom: 36px;
+    }
+
+    /* app title footer */
+    .app-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #b0c0d0;
+      margin-top: 18px;
+      letter-spacing: 0.2px;
+      font-weight: 500;
+    }
+
+    .app-footer strong {
+      color: #0b2b4d;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper" id="appWrapper">
+    <!-- brand header -->
+    <div class="brand">
+      <div class="brand-icon">CW</div>
+      <div>
+        <div class="brand-name">Chat<span>Wazungu</span></div>
+        <div class="brand-sub">DIGITAL EARNING APP</div>
+      </div>
+    </div>
+
+    <!-- ========== SIGNUP SCREEN ========== -->
+    <div id="signupScreen" class="screen active">
+      <h1>Start earning KSH</h1>
+      <p class="subhead">Chat with foreigners and get paid instantly via M-Pesa.</p>
+
+      <div class="price-badge">
+        <i>🔒</i> Verification: <strong>KSH 100</strong> (one-time)
+      </div>
+
+      <div class="input-group">
+        <label>Full name</label>
+        <input type="text" id="signupName" placeholder="e.g. Jane Wanjiru" value="Jane Wanjiru">
+      </div>
+      <div class="input-group">
+        <label>Phone number (M-Pesa)</label>
+        <input type="tel" id="signupPhone" placeholder="0712 345 678" value="0712 345 678">
+      </div>
+      <div class="input-group">
+        <label>Email address</label>
+        <input type="email" id="signupEmail" placeholder="jane@example.com" value="jane@example.com">
+      </div>
+
+      <button class="btn btn-orange" id="signupBtn">
+        Create account → 
+      </button>
+
+      <div class="alt-action">
+        Already have an account? <a id="goToSignin">Sign in</a>
+      </div>
+      <div class="small-note">
+        By joining you agree to our terms. Activation fee KSH 100 applies.
+      </div>
+    </div>
+
+    <!-- ========== SIGNIN SCREEN ========== -->
+    <div id="signinScreen" class="screen">
+      <h1>Welcome back</h1>
+      <p class="subhead">Sign in to continue chatting & earning.</p>
+
+      <div class="price-badge">
+        <i>✅</i> Account activation: <strong>KSH 100</strong> (if not active)
+      </div>
+
+      <div class="input-group">
+        <label>Phone number</label>
+        <input type="tel" id="signinPhone" placeholder="0712 345 678" value="0712 345 678">
+      </div>
+
+      <button class="btn btn-orange" id="signinBtn">
+        Sign in →
+      </button>
+
+      <div class="alt-action">
+        New here? <a id="goToSignup">Create account</a>
+      </div>
+    </div>
+
+    <!-- ========== ACTIVATION SCREEN (KSH 100) ========== -->
+    <div id="activationScreen" class="screen">
+      <h1>Activate account</h1>
+      <p class="subhead">Pay KSH 100 via M-Pesa to start earning. Money goes to admin.</p>
+
+      <div class="price-badge" style="background:#e8f0fe; color:#0b2b4d;">
+        <i>💰</i> Activation fee: <strong>KSH 100</strong>
+      </div>
+
+      <div class="input-group">
+        <label>M-Pesa phone number</label>
+        <input type="tel" id="activationPhone" placeholder="0712 345 678" value="0712 345 678" readonly style="background:#f0f4fa;">
+      </div>
+
+      <div class="input-group">
+        <label>Enter M-Pesa PIN (simulated)</label>
+        <input type="password" id="mpesaPin" class="pin-input" placeholder="••••" maxlength="4" value="1234">
+      </div>
+
+      <button class="btn btn-orange" id="activateBtn">
+        Pay KSH 100 & activate
+      </button>
+      <div class="small-note" style="margin-top:16px;">
+        🔒 Payment goes directly to admin account. Secure.
+      </div>
+    </div>
+
+    <!-- ========== DASHBOARD SCREEN ========== -->
+    <div id="dashboardScreen" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h1 style="font-size: 24px; margin:0;">Dashboard</h1>
+        <span class="admin-badge">ADMIN: 0790522994</span>
+      </div>
+
+      <div class="balance-card">
+        <div class="balance-label">Your balance</div>
+        <div class="balance-amount">
+          KSH <span id="balanceAmount">0</span>
+        </div>
+        <div class="stats-row">
+          <div class="stat-item">💬 0 chats</div>
+          <div class="stat-item">⏳ 0 pending</div>
+        </div>
+      </div>
+
+      <div class="chat-preview">
+        <div class="chat-preview-header">
+          <span>🌍 Foreigners online</span>
+          <i>💰 KSH 30 / min</i>
+        </div>
+
+        <div class="foreigner-row">
+          <div class="avatar">JM</div>
+          <div class="foreigner-info">
+            <div class="foreigner-name">James <span class="flag">🇺🇸</span></div>
+            <span class="earn-rate">Earn KSH 30/min</span>
+          </div>
+          <button class="chat-btn" data-foreigner="James">Chat</button>
+        </div>
+
+        <div class="foreigner-row">
+          <div class="avatar">SL</div>
+          <div class="foreigner-info">
+            <div class="foreigner-name">Sophie <span class="flag">🇫🇷</span></div>
+            <span class="earn-rate">Earn KSH 35/min</span>
+          </div>
+          <button class="chat-btn" data-foreigner="Sophie">Chat</button>
+        </div>
+
+        <div class="foreigner-row">
+          <div class="avatar">MK</div>
+          <div class="foreigner-info">
+            <div class="foreigner-name">Mark <span class="flag">🇬🇧</span></div>
+            <span class="earn-rate">Earn KSH 28/min</span>
+          </div>
+          <button class="chat-btn" data-foreigner="Mark">Chat</button>
+        </div>
+      </div>
+
+      <button class="btn" id="logoutBtn" style="background: #f0f4fa; color:#0b2b4d; box-shadow: none;">
+        ← Log out
+      </button>
+    </div>
+
+    <div class="app-footer">
+      <strong>ChatWazungu</strong> Digital Earning App · v1.0
+    </div>
+  </div>
+
+  <!-- modal for admin transfer note -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-box">
+      <h3>💰 Activation successful</h3>
+      <p>KSH 100 has been sent to the admin account. Your account is now active.</p>
+      <p style="font-size:13px; color:#0b2b4d; font-weight:500; background:#eef2f9; padding:10px; border-radius:20px;">
+        Admin account: <strong>0790522994</strong> (ChatWazungu Digital)
+      </p>
+      <button class="btn btn-orange" id="closeModalBtn" style="margin-top: 8px;">Go to dashboard</button>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast">Notification</div>
+
+  <script>
+    (function() {
+      // ----- DOM elements -----
+      const signupScreen = document.getElementById('signupScreen');
+      const signinScreen = document.getElementById('signinScreen');
+      const activationScreen = document.getElementById('activationScreen');
+      const dashboardScreen = document.getElementById('dashboardScreen');
+
+      const goToSignin = document.getElementById('goToSignin');
+      const goToSignup = document.getElementById('goToSignup');
+
+      const signupBtn = document.getElementById('signupBtn');
+      const signinBtn = document.getElementById('signinBtn');
+      const activateBtn = document.getElementById('activateBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      const signupName = document.getElementById('signupName');
+      const signupPhone = document.getElementById('signupPhone');
+      const signupEmail = document.getElementById('signupEmail');
+      const signinPhone = document.getElementById('signinPhone');
+      const activationPhone = document.getElementById('activationPhone');
+      const mpesaPin = document.getElementById('mpesaPin');
+
+      const balanceAmount = document.getElementById('balanceAmount');
+      const adminModal = document.getElementById('adminModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const toast = document.getElementById('toast');
+
+      // ----- State -----
+      let currentUser = {
+        name: 'Jane Wanjiru',
+        phone: '0712 345 678',
+        email: 'jane@example.com',
+        balance: 0,
+        chats: 0,
+        activated: false
+      };
+
+      // ----- Helper: show screen -----
+      function showScreen(screen) {
+        [signupScreen, signinScreen, activationScreen, dashboardScreen].forEach(s => s.classList.remove('active'));
+        screen.classList.add('active');
+      }
+
+      // ----- Helper: show toast -----
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      // ----- Update dashboard balance display -----
+      function updateDashboardBalance() {
+        balanceAmount.textContent = currentUser.balance;
+      }
+
+      // ----- SIGNUP flow -----
+      signupBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const name = signupName.value.trim() || 'Guest User';
+        const phone = signupPhone.value.trim() || '0712 345 678';
+        const email = signupEmail.value.trim() || 'user@example.com';
+
+        currentUser.name = name;
+        currentUser.phone = phone;
+        currentUser.email = email;
+        currentUser.balance = 0;
+        currentUser.activated = false;
+
+        // go to activation screen (since new signup requires activation)
+        activationPhone.value = phone;
+        mpesaPin.value = '';  // clear pin
+
+        showScreen(activationScreen);
+        showToast(`Welcome ${name}! Please activate.`);
+      });
+
+      // ----- SIGNIN flow -----
+      signinBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const phone = signinPhone.value.trim();
+        if (!phone) {
+          showToast('Please enter your phone number');
+          return;
+        }
+
+        // Simulate: existing user
+        currentUser.phone = phone;
+        currentUser.name = phone.includes('0712') ? 'Jane Wanjiru' : 'User ' + phone.slice(-4);
+        currentUser.activated = false;   // always need activation for demo
+
+        if (currentUser.activated === true) {
+          updateDashboardBalance();
+          showScreen(dashboardScreen);
+          showToast('Welcome back!');
+        } else {
+          activationPhone.value = phone;
+          mpesaPin.value = '';
+          showScreen(activationScreen);
+          showToast('Please activate your account (KSH 100)');
+        }
+      });
+
+      // ----- ACTIVATION (pay KSH 100) -----
+      activateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const pin = mpesaPin.value.trim();
+        if (!pin || pin.length < 4) {
+          showToast('Please enter a valid 4-digit M-Pesa PIN');
+          return;
+        }
+
+        // Simulate payment processing
+        showToast('Processing M-Pesa payment...');
+
+        setTimeout(() => {
+          // Mark user activated
+          currentUser.activated = true;
+
+          // Admin number 0790522994 receives KSH 100 (log it)
+          console.log(`[ADMIN 0790522994] KSH 100 received from ${currentUser.phone} (${currentUser.name})`);
+
+          // Show admin modal (money to admin)
+          adminModal.classList.add('show');
+
+          // Clear pin
+          mpesaPin.value = '';
+
+          // Update balance (starting from 0)
+          currentUser.balance = 0;
+          updateDashboardBalance();
+        }, 700);
+      });
+
+      // close modal → dashboard
+      closeModalBtn.addEventListener('click', function() {
+        adminModal.classList.remove('show');
+        updateDashboardBalance();
+        showScreen(dashboardScreen);
+        showToast('Account activated! Start chatting.');
+      });
+
+      // also close modal by clicking overlay
+      adminModal.addEventListener('click', function(e) {
+        if (e.target === adminModal) {
+          adminModal.classList.remove('show');
+          updateDashboardBalance();
+          showScreen(dashboardScreen);
+          showToast('Account activated! Start chatting.');
+        }
+      });
+
+      // ----- LOGOUT -----
+      logoutBtn.addEventListener('click', function() {
+        currentUser = {
+          name: 'Jane Wanjiru',
+          phone: '0712 345 678',
+          email: 'jane@example.com',
+          balance: 0,
+          chats: 0,
+          activated: false
+        };
+        signupName.value = 'Jane Wanjiru';
+        signupPhone.value = '0712 345 678';
+        signupEmail.value = 'jane@example.com';
+        signinPhone.value = '0712 345 678';
+        mpesaPin.value = '';
+        showScreen(signupScreen);
+        showToast('Logged out');
+      });
+
+      // ----- navigation between signup / signin -----
+      goToSignin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showScreen(signinScreen);
+        if (currentUser.phone) signinPhone.value = currentUser.phone;
+      });
+
+      goToSignup.addEventListener('click', function(e) {
+        e.preventDefault();
+        showScreen(signupScreen);
+      });
+
+      // ----- simulate chat earning (increment balance) -----
+      document.querySelectorAll('.chat-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const foreigner = this.getAttribute('data-foreigner') || 'Foreigner';
+          const earnAmount = 30;
+          currentUser.balance += earnAmount;
+          currentUser.chats += 1;
+          updateDashboardBalance();
+          showToast(`You earned KSH ${earnAmount} chatting with ${foreigner}!`);
+          const statChats = document.querySelector('.stat-item:first-child');
+          if (statChats) statChats.innerHTML = `💬 ${currentUser.chats} chats`;
+        });
+      });
+
+      // initial update
+      updateDashboardBalance();
+      activationPhone.value = '0712 345 678';
+      adminModal.classList.remove('show');
+      showScreen(signupScreen);
+
+      // ensure activation phone gets set properly
+      activateBtn.addEventListener('click', function() {
+        if (!activationPhone.value.trim()) {
+          activationPhone.value = currentUser.phone || '0712 345 678';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
